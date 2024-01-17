@@ -10,7 +10,7 @@ function Message() {
   const [mensajesPorUsuario, setMensajePorUsuario] = useState({});
   const [chatsRecientes, setChatsRecientes] = useState([]);
   const [unreadMessages, setUnreadMessages] = useState({});
-  const socket = io("http://localhost:3001", { transports: ["websocket"] });
+  const socket = io();
 
   const messageContainerRef = useRef(null)
 
