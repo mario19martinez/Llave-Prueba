@@ -10,7 +10,7 @@ function Message() {
   const [mensajesPorUsuario, setMensajePorUsuario] = useState({});
   const [chatsRecientes, setChatsRecientes] = useState([]);
   const [unreadMessages, setUnreadMessages] = useState({});
-  const socket = io();
+  const socket = io("https://llave-prueba-production.up.railway.app", { transports: ["websocket"] });
 
   const messageContainerRef = useRef(null)
 
