@@ -52,7 +52,7 @@ import ViewMyPost from "./views/ViewMenuStudent/ViewMyPost";
 import axios from "axios";
 
 //axios.defaults.baseURL = "http://localhost:3001";
-axios.defaults.baseURL = "llave-prueba-production.up.railway.app";
+axios.defaults.baseURL = "https://llave-prueba-production.up.railway.app";
 const isLoggedIn = localStorage.getItem("isLoggedIn");
 
 function App() {
