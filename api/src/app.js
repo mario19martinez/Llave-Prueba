@@ -17,7 +17,7 @@ require("./db");
 
 const server = express();
 const httpServer = http.createServer(server);
-const io = socket(httpServer);
+const io = socket(httpServer, { transports: ["websocket"] });
 
 server.name = "API";
 
@@ -155,7 +155,13 @@ const startChat = async (req, res) => {
       chatId,
     });
 
-    //io.emit("nuevo-mensaje", nuevoMensaje);
+    // const mensajesActualizados = await Message.findAll({
+    //   where: { chatId },
+    //   order: [['createAt', 'ASC']],
+    // })
+
+    //io.to(socket.id).emit('historial-mensajes', mensajesActualizados);
+    io.emit("nuevo-mensaje", nuevoMensaje);
 
     return res.status(201).json({ message: "Chat iniciado" });
   } catch (error) {

@@ -10,6 +10,7 @@ function Message() {
   const [mensajesPorUsuario, setMensajePorUsuario] = useState({});
   const [chatsRecientes, setChatsRecientes] = useState([]);
   const [unreadMessages, setUnreadMessages] = useState({});
+  //const socket = io("http://localhost:3001", { transports: ["websocket"] });
   const socket = io("https://llave-prueba-production.up.railway.app", { transports: ["websocket"] });
 
   const messageContainerRef = useRef(null)
@@ -158,6 +159,7 @@ function Message() {
     }
   }, [ultimosChatsOrdenados]);
 
+
   // Solicita permisos de notificaciones al cargar el componente
   useEffect(() => {
     if ("Notification" in window) {
@@ -195,7 +197,11 @@ function Message() {
           body: nuevoMensaje.content,
         });
       }
+      if (messageContainerRef.current) {
+        messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      }
     });
+
 
     socket.on("usuarios-conectados", (usuariosConectados) => {
       setUsuarios(usuariosConectados);
