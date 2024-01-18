@@ -98,6 +98,7 @@ function Message() {
         ...prevMensajes,
         [userSelected.sub]: mensajes,
       }));
+      console.log('mensaje:', response)
     } catch (error) {
       console.error("Error al obtener mensajes entre usuarios:", error);
     }
@@ -175,12 +176,32 @@ function Message() {
       }
 
       setMensajePorUsuario((prevMensajes) => {
+        //const usuarioId = userSelected ? userSelected.sub : null;
         const mensajesPorUsuario = prevMensajes[usuarioId] || [];
+        const nuevosMensajes = [nuevoMensaje, ...mensajesPorUsuario];
+      
+        // Asegurarse de que la referencia es válida
+        if (messageContainerRef.current) {
+          // Actualizar el estado con los nuevos mensajes
+          setMensajePorUsuario((prevMensajes) => ({
+            ...prevMensajes,
+            [usuarioId]: nuevosMensajes,
+          }));
+      
+          // Ajustar el desplazamiento hacia abajo después de la actualización del estado
+          messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+      
         return {
           ...prevMensajes,
-          [usuarioId]: [...mensajesPorUsuario, nuevoMensaje],
+          [usuarioId]: nuevosMensajes,
         };
       });
+      //   return {
+      //     ...prevMensajes,
+      //     [usuarioId]: [...mensajesPorUsuario, nuevoMensaje],
+      //   };
+      // });
 
       if (usuarioId !== nuevoMensaje.from && !document.hasFocus()) {
         setUnreadMessages((prevUnreadMessages) => {
@@ -197,9 +218,9 @@ function Message() {
           body: nuevoMensaje.content,
         });
       }
-      if (messageContainerRef.current) {
-        messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-      }
+      // if (messageContainerRef.current) {
+      //   messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      // }
     });
 
 
@@ -371,8 +392,8 @@ function Message() {
               userSelected.sub &&
               mensajesPorUsuario[userSelected.sub] &&
               mensajesPorUsuario[userSelected.sub]
-                .slice(0)
-                .reverse()
+                 .slice(0)
+                
                 .map((mensaje, index) => (
                   <div
                     key={index}
@@ -392,7 +413,7 @@ function Message() {
                       {mensaje.content}
                     </div>
                   </div>
-                ))}
+                )).reverse()}
           </div>
         </div>
         <div className="flex-1 overflow-auto bg-gray-100 p-4"></div>
