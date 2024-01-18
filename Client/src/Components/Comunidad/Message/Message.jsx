@@ -107,6 +107,12 @@ function Message() {
   // Iniciar un Chat con un usuario
   const iniciarChat = async (usuario) => {
     setUserSelected(usuario);
+
+    setMensajePorUsuario((prevMensajes) => {
+      const nuevosMensajes = { ...prevMensajes };
+      nuevosMensajes[usuario.sub] = [];
+      return nuevosMensajes;
+    });
   
     const existeChat = chatsRecientes.some((chat) => chat.sub === usuario.sub);
   
