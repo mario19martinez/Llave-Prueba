@@ -34,7 +34,7 @@ router.get("/messages", verifyToken, async (req, res) => {
           { senderId: receiverId, receiverId: senderId },
         ],
       },
-      order: [["createdAt", "ASC"]],
+      order: [["createdAt", "DESC"]],
     });
 
     res.status(200).json({ messages });
