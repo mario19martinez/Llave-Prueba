@@ -78,29 +78,49 @@ function Message() {
   // Cargar mensajes al seleccionar un usuario
   const cargarMensajes = async () => {
     try {
-      if (!userInfo || !userSelected || !userSelected.sub) {
+      console.log("Valor de chatId en cargarMensaje:", userSelected);
+      if (!userInfo || !userSelected || !userSelected.sub ) {
         console.warn(
-          "La informacion del usuario o el usuario seleccionado no esta definida."
+          "La información del usuario o el usuario seleccionado no está definida."
         );
         return;
       }
+      //setSelectedChatId(chatId);
       const token = localStorage.getItem("token");
-      const response = await axios.get(`/chat-users/${userSelected.sub}`, {
+      console.log("token:", token);
+
+      const response = await axios.get("/messages", {
+        params: {
+          senderId: userInfo.sub,
+          receiverId: userSelected.sub,
+          //chatId: selectedChatId,
+        },
         headers: { Authorization: `Bearer ${token}` },
       });
-  
-      const mensajes = response.data.map((mensaje) => ({
-        ...mensaje,
-        messageType: mensaje.senderId === userInfo.sub ? "sent" : "received",
-      }));
-  
-      setMensajePorUsuario((prevMensajes) => ({
-        ...prevMensajes,
-        [userSelected.sub]: mensajes,
-      }));
-      console.log('mensaje:', response)
+
+      if (response.data && Array.isArray(response.data.messages)) {
+        const mensajes = response.data.messages.map((mensaje) => ({
+          ...mensaje,
+          messageType: mensaje.senderId === userInfo.sub ? "sent" : "received",
+        }));
+
+        setMensajePorUsuario((prevMensajes) => ({
+          ...prevMensajes,
+          [userSelected.sub]: mensajes,
+        }));
+
+        console.log("Mensaje:", response);
+      } else {
+        console.error(
+          "La respuesta del servidor no contiene un array de mensajes válido:",
+          response
+        );
+      }
     } catch (error) {
-      console.error("Error al obtener mensajes entre usuarios:", error);
+      console.error(
+        "Error al obtener mensajes entre usuarios:",
+        error.response || error
+      );
     }
   };
 

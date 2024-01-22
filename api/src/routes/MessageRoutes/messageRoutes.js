@@ -6,6 +6,8 @@ const {
   getUsersChat,
 } = require("../../controllers/MessageController/getUserMessage");
 const { verifyToken } = require("../../middleware/authMiddleware");
+const { Message } = require("../../db");
+const { Op } = require("sequelize");
 
 const router = Router();
 
@@ -21,5 +23,25 @@ router.get("/user-info", verifyToken, getUserInfo);
 // Ruta GET que trae los usuarios con los que se ha tenido chat
 router.get("/chat-historial", verifyToken, getUsersChat);
 
+router.get("/messages", verifyToken, async (req, res) => {
+  try {
+    const { senderId, receiverId } = req.query;
+
+    const messages = await Message.findAll({
+      where: {
+        [Op.or]: [
+          { senderId, receiverId },
+          { senderId: receiverId, receiverId: senderId },
+        ],
+      },
+      order: [["createdAt", "ASC"]],
+    });
+
+    res.status(200).json({ messages });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
