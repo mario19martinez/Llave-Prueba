@@ -8,17 +8,31 @@ const Comments = ({ postId }) => {
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
-    fetchComments();
-  }, );
-
-  const fetchComments = async () => {
-    try {
-      const response = await axios.get(`/comments/${postId}`);
-      setComments(response.data.comments);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
+    // Logica para recuperar comentarios asociados a postId
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(`/comments/${postId}`);
+        setComments(response.data.comments);
+      }catch (error) {
+        console.error('Error fetching comments:', error);
+      }
     }
-  };
+
+    fetchComments();
+  }, [postId]);
+
+  // useEffect(() => {
+  //   fetchComments();
+  // }, []);
+
+  // const fetchComments = async () => {
+  //   try {
+  //     const response = await axios.get(`/comments/${postId}`);
+  //     setComments(response.data.comments);
+  //   } catch (error) {
+  //     console.error("Error fetching comments:", error);
+  //   }
+  // };
 
   const handleAddComment = async () => {
     try {
@@ -28,19 +42,28 @@ const Comments = ({ postId }) => {
           Authorization: `Bearer ${authToken}`,
         },
       };
-
+  
       const response = await axios.post(
         "/newComment",
         { postId, content: newComment },
         config
       );
-
-      setComments([...comments, response.data.comment]);
-      setNewComment(""); // Limpiar el campo del nuevo comentario después de agregarlo
+  
+      if (response.data && response.data.error) {
+        console.error("Server error:", response.data.error);
+        // Manejar el error de manera adecuada
+      } else {
+        setComments([...comments, response.data.comment]);
+        setNewComment("");
+      }
     } catch (error) {
       console.error("Error adding comment:", error);
+  
+      // Imprimir la respuesta del servidor en la consola
+      console.log("Server response:", error.response);
     }
   };
+  
 
   const handleDeleteComment = async (commentId) => {
     try {

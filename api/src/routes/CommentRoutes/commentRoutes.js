@@ -6,11 +6,12 @@ const {
 const {
   deleteComment,
 } = require("../../controllers/CommentController/deleteComment");
+const { verifyToken } = require('../../middleware/authMiddleware')
 
 const router = Router();
 
 // Ruta para agregar un comentario a una publicacion
-router.post("/newComment", addComment);
+router.post("/newComment", verifyToken, addComment);
 
 // Ruta para actualizar un comentario
 router.put("/comment/:commentId", updateComment);
