@@ -1,4 +1,4 @@
-const { Comment } = require("../../db");
+const { Comment, User } = require("../../db");
 
 const getComment = async (req, res) => {
   const postId = req.params.postId;
@@ -7,6 +7,11 @@ const getComment = async (req, res) => {
     // Aca va la logica para obtener los comentarios asociados a la publicacion.
     const comments = await Comment.findAll({
       where: { postId: postId },
+      include: {
+        model: User,
+        attributes: ['name', 'last_name'],
+        as: 'user',
+      }
     });
 
     return res.status(200).json({ comments });
