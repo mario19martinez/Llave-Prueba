@@ -8,12 +8,12 @@ const Comments = ({ postId }) => {
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
-    // Logica para recuperar comentarios asociados a postId
+    // Lógica para recuperar comentarios asociados a postId
     const fetchComments = async () => {
       try {
         const response = await axios.get(`/comments/${postId}`);
         setComments(response.data.comments);
-      }catch (error) {
+      } catch (error) {
         console.error('Error fetching comments:', error);
       }
     }
@@ -21,18 +21,6 @@ const Comments = ({ postId }) => {
     fetchComments();
   }, [postId]);
 
-  // useEffect(() => {
-  //   fetchComments();
-  // }, []);
-
-  // const fetchComments = async () => {
-  //   try {
-  //     const response = await axios.get(`/comments/${postId}`);
-  //     setComments(response.data.comments);
-  //   } catch (error) {
-  //     console.error("Error fetching comments:", error);
-  //   }
-  // };
 
   const handleAddComment = async () => {
     try {
