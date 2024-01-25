@@ -162,8 +162,11 @@ Card.belongsTo(User);
 Question.belongsTo(User);
 User.hasMany(Question);
 
-Answer.belongsTo(User);
-Answer.belongsTo(Question);
+User.hasMany(Answer, { foreignKey: "userSub" });
+Answer.belongsTo(User, { foreignKey: "userSub" });
+Question.hasMany(Answer, { foreignKey: "questionId" });
+// Answer.belongsTo(User);
+// Answer.belongsTo(Question);
 
 module.exports = {
   ...sequelize.models,

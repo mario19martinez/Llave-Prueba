@@ -44,12 +44,13 @@ router.get("/question/:id/answers", async (req, res) => {
     const { id } = req.params;
 
     const answers = await Answer.findAll({
-      where: { questionID: id },
+      where: { questionId: id },
       include: {
         model: User,
-        attributes: ['sub', 'name', 'last_name']
+        attributes: [ 'name', 'last_name']
       }
     });
+    console.log('answers:', answers)
     res.status(200).json(answers);
   } catch (error) {
     console.error(error);

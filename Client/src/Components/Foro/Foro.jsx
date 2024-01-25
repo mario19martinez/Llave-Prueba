@@ -89,6 +89,30 @@ function Foro() {
     }
   };
 
+  const toggleVisibleResponses = (questionId) => {
+    setVisibleResponses((prevVisibleResponses) => ({
+      ...prevVisibleResponses,
+      [questionId]: !prevVisibleResponses[questionId],
+    }));
+
+    // Cargar respuestas si aun no estan cargadas
+    if (!responses[questionId]) {
+      fetchAnswers(questionId);
+    }
+  };
+
+  const fetchAnswers = async (questionId) => {
+    try {
+      const response = await axios.get(`/question/${questionId}/answers`);
+      setResponses((prevResponses) => ({
+        ...prevResponses,
+        [questionId]: response.data,
+      }));
+    } catch (error) {
+      console.error("Error al obtener respuestas:", error);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Preguntas & Respuestas</h1>
@@ -134,14 +158,17 @@ function Foro() {
                 </button>
               </div>
 
-              {responses[question.id] &&
-              Array.isArray(responses[question.id]) &&
-              responses[question.id].length > 0 ? (
+              {visibleResponses[question.id] &&
+              responses[question.id] &&
+              Array.isArray(responses[question.id]) ? (
                 <ul className="list-disc pl-6">
                   {responses[question.id].map((answer) => (
-                    <li key={answer.id} className="text-gray-700">
-                      {answer.text}
-                    </li>
+                    <div key={answer.id} className="text-gray-700">
+                      <p className="text-gray-700 font-gabarito">
+                        {answer.user?.name} {answer.user?.last_name}
+                      </p>
+                      <p className="text-gray-700">{answer.text}</p>
+                    </div>
                   ))}
                 </ul>
               ) : (
@@ -150,32 +177,11 @@ function Foro() {
 
               <button
                 className="text-blue-500 cursor-pointer"
-                onClick={() =>
-                  setVisibleResponses((prevVisibleResponses) => ({
-                    ...prevVisibleResponses,
-                    [question.id]: !prevVisibleResponses[question.id],
-                  }))
-                }
+                onClick={() => toggleVisibleResponses(question.id)}
               >
-                {visibleResponses[question.id]
-                  ? "Ocultar"
-                  : "Mostrar"}{" "}
+                {visibleResponses[question.id] ? "Ocultar" : "Mostrar"}{" "}
                 respuestas
               </button>
-
-              {visibleResponses[question.id] &&
-              responses[question.id] &&
-              Array.isArray(responses[question.id]) ? (
-                <div className="ml-6">
-                  <ul className="list-disc pl-6">
-                    {responses[question.id].map((answer) => (
-                      <li key={answer.id} className="text-gray-700">
-                        {answer.text}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
             </div>
           ))
         ) : (
