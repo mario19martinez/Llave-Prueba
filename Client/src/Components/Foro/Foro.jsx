@@ -134,7 +134,10 @@ function Foro() {
       <div>
         {questions && questions.length > 0 ? (
           questions.map((question) => (
-            <div key={question.id} className="mb-8 border p-4">
+            <div key={question.id} className="mb-8 border p-4 ">
+              <p className="text-gray-700 font-hammersmithOne">
+                {question.user?.name} {question.user?.last_name}
+              </p>
               <p className="font-bold text-lg">Pregunta: {question.text}</p>
               <div className="mb-4">
                 <input
@@ -158,29 +161,43 @@ function Foro() {
                 </button>
               </div>
 
-              {visibleResponses[question.id] &&
-              responses[question.id] &&
-              Array.isArray(responses[question.id]) ? (
-                <ul className="list-disc pl-6">
-                  {responses[question.id].map((answer) => (
-                    <div key={answer.id} className="text-gray-700">
-                      <p className="text-gray-700 font-gabarito">
-                        {answer.user?.name} {answer.user?.last_name}
-                      </p>
-                      <p className="text-gray-700">{answer.text}</p>
-                    </div>
-                  ))}
-                </ul>
-              ) : (
-                <p>No hay respuestas para esta pregunta.</p>
+              {visibleResponses[question.id] && (
+                <>
+                  {responses[question.id] && (
+                    <p className="text-gray-700 font-semibold">
+                      Respuestas: {responses[question.id].length}
+                    </p>
+                  )}
+
+                  {Array.isArray(responses[question.id]) &&
+                  responses[question.id].length > 0 ? (
+                    <ul className="list-disc pl-6">
+                      {responses[question.id].map((answer) => (
+                        <div key={answer.id} className="text-gray-700">
+                          <p className="text-gray-700 font-gabarito">
+                            {answer.user?.name} {answer.user?.last_name}
+                          </p>
+                          <p className="text-gray-700">{answer.text}</p>
+                        </div>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No hay respuestas para esta pregunta.</p>
+                  )}
+                </>
               )}
 
               <button
-                className="text-blue-500 cursor-pointer"
+                className="text-blue-500 cursor-pointer flex items-center"
                 onClick={() => toggleVisibleResponses(question.id)}
               >
                 {visibleResponses[question.id] ? "Ocultar" : "Mostrar"}{" "}
                 respuestas
+                {responses[question.id] && (
+                  <span className="ml-2 text-gray-700 font-semibold">
+                    ({responses[question.id].length})
+                  </span>
+                )}
               </button>
             </div>
           ))

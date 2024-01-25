@@ -5,7 +5,12 @@ const router = Router();
 
 router.get("/question", async (req, res) => {
   try {
-    const question = await Question.findAll({ include: User });
+    const question = await Question.findAll({
+      include: {
+        model: User,
+        attributes: ["name", "last_name"],
+      },
+    });
     res.status(200).json(question);
   } catch (error) {
     console.error(error);
@@ -20,17 +25,17 @@ router.post("/question", async (req, res) => {
 
     // Busca el usuario por su userSub
     const user = await User.findOne({ where: { sub: userSub } });
-    console.log('usuario:', user)
+    console.log("usuario:", user);
 
     if (!user) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
     const question = await Question.create({
       text,
       userSub: user.sub,
     });
-    console.log('Pregunta:', question)
+    console.log("Pregunta:", question);
 
     res.status(201).json(question);
   } catch (error) {
@@ -47,10 +52,10 @@ router.get("/question/:id/answers", async (req, res) => {
       where: { questionId: id },
       include: {
         model: User,
-        attributes: [ 'name', 'last_name']
-      }
+        attributes: ["name", "last_name"],
+      },
     });
-    console.log('answers:', answers)
+    console.log("answers:", answers);
     res.status(200).json(answers);
   } catch (error) {
     console.error(error);
@@ -67,13 +72,13 @@ router.post("/question/:id/answers", async (req, res) => {
     const question = await Question.findByPk(id);
 
     if (!question) {
-      return res.status(404).json({ error: 'Pregunta no encontrada' });
+      return res.status(404).json({ error: "Pregunta no encontrada" });
     }
 
     const user = await User.findOne({ where: { sub: userSub } });
 
     if (!user) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
     const answer = await Answer.create({
