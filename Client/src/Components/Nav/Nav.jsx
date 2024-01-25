@@ -141,6 +141,11 @@ export default function Nav() {
           className="hover:text-gray-300 transition-colors">
             Comunidad
           </a>
+          <a href="" 
+          onClick={() => navigate("/foro")}
+          className="hover:text-gray-300 transition-colors">
+            Foro
+          </a>
           <a
             href=""
             className="hover:text-gray-300 transition-colors"

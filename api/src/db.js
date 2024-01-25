@@ -12,7 +12,6 @@ if (!fs.existsSync(directorioDeSubida)) {
   fs.mkdirSync(directorioDeSubida); // Crea el directorio si no existe
 }
 
-
 const sequelize = new Sequelize(
   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
   {
@@ -68,6 +67,9 @@ const {
   Message,
   Testimonios,
   Chat,
+  Card,
+  Answer,
+  Question,
 } = sequelize.models;
 
 // Aca vendrian las relaciones
@@ -124,7 +126,7 @@ User.hasMany(Amistad, { as: "sentRequests", foreignKey: "senderId" });
 User.hasMany(Amistad, { as: "receivedRequests", foreignKey: "receiverId" });
 
 // Relaciones para el modelo Post
-Post.belongsTo(User, { foreignKey: 'userSub' });
+Post.belongsTo(User, { foreignKey: "userSub" });
 Post.hasMany(Comment);
 Post.hasMany(Like);
 
@@ -153,6 +155,15 @@ Chat.belongsTo(User, { as: "user2", foreignKey: "user2Id" });
 
 Chat.hasMany(Message, { foreignKey: "chatId" });
 Message.belongsTo(Chat, { foreignKey: "chatId" });
+
+User.hasMany(Card);
+Card.belongsTo(User);
+
+Question.belongsTo(User);
+User.hasMany(Question);
+
+Answer.belongsTo(User);
+Answer.belongsTo(Question);
 
 module.exports = {
   ...sequelize.models,

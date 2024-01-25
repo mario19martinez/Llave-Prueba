@@ -19,6 +19,8 @@ const BlogRoutes = require("./blogRoutes");
 const getAbaut = require("./getAbaut");
 const getTalleres = require("./getTalleres");
 //const getPreguntaTaller = ('./getPreguntaTaller')
+const cardRoutes = require("./cardRoutes/cardRoutes");
+const questionRoutes = require("./questionRoutes/questionRoutes");
 const router = Router();
 
 router.use("/", getUser);
@@ -40,5 +42,7 @@ router.use("/", BlogRoutes);
 router.use("/", getAbaut);
 router.use("/", getTalleres);
 //router.use("/", getPreguntaTaller);
+router.use("/", cardRoutes);
+router.use("/", questionRoutes);
 
 module.exports = router;
