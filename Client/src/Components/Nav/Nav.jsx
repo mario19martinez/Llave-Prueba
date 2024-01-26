@@ -154,10 +154,11 @@ export default function Nav() {
             Nosotros
           </a>
 
-          <div className="w-1/6 lg:w-2/12 h-auto rounded-full">
+          <div className="w-1/6 lg:w-2/12 h-auto rounded-full lg:hidden">
             <a href=""
             onClick={() => navigate("/comunidad")}>
-          <img src='https://static.vecteezy.com/system/resources/thumbnails/027/126/112/small/world-map-on-globe-silhouette-for-icon-symbol-app-website-pictogram-logo-type-art-illustration-or-graphic-design-element-format-png.png' alt="logo" className="rounded-full w-20" />
+          <img src='https://static.vecteezy.com/system/resources/thumbnails/027/126/112/small/world-map-on-globe-silhouette-for-icon-symbol-app-website-pictogram-logo-type-art-illustration-or-graphic-design-element-format-png.png' alt="logo" 
+          className="rounded-full w-20" />
           </a>
         </div>
         </nav>

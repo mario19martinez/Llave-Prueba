@@ -74,6 +74,13 @@ const Comments = ({ postId }) => {
   return (
     <div>
       <h2 className="text-lx font-bold mb-4">Comments</h2>
+      <p className="text-gray-500 mb-2">
+        {comments.length === 1
+          ? "1 comment"
+          : comments.length > 1
+          ? `${comments.length} comments`
+          : "No comments"}
+      </p>
       <ul className="list-none p-0">
         {comments.map((comment) => (
           <li key={comment.id} className="mb-4 border-b pb-2 bg-gray-200">
