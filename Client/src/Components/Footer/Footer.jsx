@@ -75,7 +75,7 @@ function Footer() {
         className={styles.copyright}
         style={{ textAlign: "center", padding: "10px" }}
       >
-        Copyright © 2023 Llave Para Las Naciones | Funciona con Llave Para Las
+        Copyright © 2024 Llave Para Las Naciones | Funciona con Llave Para Las
         Naciones
       </div>
     </div>

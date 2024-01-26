@@ -83,7 +83,7 @@ export default function Nav() {
 
   return (
     <nav className="bg-blue-900 py-2 lg:py-3 px-8 lg:px-12 shadow-md">
-      <div className="flex items-center justify-between max-w-screen-lg mx-auto">
+      <div className="flex items-center justify-between max-w-screen-lg mx-auto -translate-x-14">
         <div className="w-1/4 lg:w-2/12">
           <img src={logo} alt="logo" className="h-auto" />
         </div>
@@ -153,9 +153,16 @@ export default function Nav() {
           >
             Nosotros
           </a>
+
+          <div className="w-1/6 lg:w-2/12 h-auto rounded-full">
+            <a href=""
+            onClick={() => navigate("/comunidad")}>
+          <img src='https://static.vecteezy.com/system/resources/thumbnails/027/126/112/small/world-map-on-globe-silhouette-for-icon-symbol-app-website-pictogram-logo-type-art-illustration-or-graphic-design-element-format-png.png' alt="logo" className="rounded-full w-20" />
+          </a>
+        </div>
         </nav>
 
-        <div className="hidden lg:flex justify-center items-center gap-8">
+        <div className="hidden lg:flex justify-center items-center gap-8 translate-x-10">
           {isLoggedIn ? (
             <button
               type="button"

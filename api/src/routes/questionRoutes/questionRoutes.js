@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { Question, Answer, User } = require("../../db");
+const { verifyToken } = require('../../middleware/authMiddleware')
 
 const router = Router();
 
@@ -19,13 +20,12 @@ router.get("/question", async (req, res) => {
 });
 
 // Ruta POST para crear una nueva pregunta
-router.post("/question", async (req, res) => {
+router.post("/question", verifyToken, async (req, res) => {
   try {
     const { userSub, text } = req.body;
 
     // Busca el usuario por su userSub
     const user = await User.findOne({ where: { sub: userSub } });
-    console.log("usuario:", user);
 
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
@@ -35,7 +35,6 @@ router.post("/question", async (req, res) => {
       text,
       userSub: user.sub,
     });
-    console.log("Pregunta:", question);
 
     res.status(201).json(question);
   } catch (error) {
@@ -55,7 +54,7 @@ router.get("/question/:id/answers", async (req, res) => {
         attributes: ["name", "last_name"],
       },
     });
-    console.log("answers:", answers);
+
     res.status(200).json(answers);
   } catch (error) {
     console.error(error);
@@ -89,6 +88,38 @@ router.post("/question/:id/answers", async (req, res) => {
 
     res.status(201).json(answer);
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Ruta DELETE para eliminar una respuesta
+router.delete("/question/:questionId/answer/:answerId", verifyToken, async (req, res) => {
+  try {
+    const { questionId, answerId } = req.params;
+    const userSub = req.query.userSub;
+    const answer = await Answer.findOne({
+      where: { id: answerId, questionId },
+      include: {
+        model: User,
+        attributes: ["sub"],
+      },
+    });
+
+    if (!answer) {
+      return res.status(404).json({ error: "Respuesta no encontrada." });
+    }
+
+    if (answer.user.sub !== userSub) {
+      return res
+        .status(403)
+        .json({ error: "No tienes permisos para eliminar esta respuesta" });
+    }
+
+    await answer.destroy();
+
+    res.status(204).send(); // 204 significa 'No Content' y se usa para indicar exito sin contenido adicional.
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });

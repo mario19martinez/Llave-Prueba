@@ -16,17 +16,15 @@ function Foro() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserSub(response.data);
+        console.log("User info obtained:", response.data);
       } catch (error) {
         console.error("Error al obtener informacion del usuario:", error);
       }
     };
+    console.log("Executing useEffect...");
     getUserInfo();
     fetchQuestions();
   }, []);
-
-  // useEffect(() => {
-  //   fetchQuestions();
-  // }, []);
 
   const fetchQuestions = async () => {
     try {
@@ -63,8 +61,8 @@ function Foro() {
 
   const handleResponse = async (questionId, text) => {
     try {
-      console.log("userSub:", userSub);
-      //console.log('userSub:', userSub.sub)
+      console.log('userSub in handleDeleteResponse:', userSub);
+
       if (!userSub) {
         console.error("No se ha proporcionado un userId valido");
         return;
@@ -110,6 +108,40 @@ function Foro() {
       }));
     } catch (error) {
       console.error("Error al obtener respuestas:", error);
+    }
+  };
+
+  // Funcion para eliminar una respuesta.
+  const handleDeleteResponse = async (questionId, answerId, e) => {
+    e.preventDefault();
+    try {
+      if (!userSub) {
+        console.error('No se ha proporcionado un userSub valido.');
+        return;
+      }
+
+      const token = localStorage.getItem('token')
+      console.log('token:', token)
+      console.log('userSub en handleDeleteResponse:', userSub);
+      const response = await axios.delete(
+        `/question/${questionId}/answer/${answerId}?userSub=${userSub.sub}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      // Actualizar el estado para reflejar la eliminacion
+      setResponses((prevResponses) => ({
+        ...prevResponses,
+        [questionId]: prevResponses[questionId].filter(
+          (answer) => answer.id !== answerId
+        ),
+      }));
+      console.log("response:", response);
+    } catch (error) {
+      console.error("Error al eliminar la respuesta:", error);
     }
   };
 
@@ -178,6 +210,16 @@ function Foro() {
                             {answer.user?.name} {answer.user?.last_name}
                           </p>
                           <p className="text-gray-700">{answer.text}</p>
+                          {userSub && userSub.sub === answer.user?.sub && (
+                            <button
+                              className="text-red-500 cursor-pointer"
+                              onClick={(e) =>
+                                handleDeleteResponse(question.id, answer.id, e)
+                              }
+                            >
+                              Eliminar
+                            </button>
+                          )}
                         </div>
                       ))}
                     </ul>
